@@ -183,14 +183,14 @@ export default function Task({ task, index, toDoTasks, setToDoTasks }) {
                 </IconButton>
               )} */}
             </Typography>
-            {/* <Button
+            <Button
               variant="contained"
               color="success"
               startIcon={<AddCircleOutlineOutlinedIcon />}
               onClick={() => setOpenAddSubTask(true)}
             >
               Add SubTask
-            </Button> */}
+            </Button>
           </Box>
 
           {task.pending.length === 0 && task.completed.length === 0 ? (
