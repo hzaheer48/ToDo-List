@@ -46,7 +46,7 @@ export default function ToDo() {
           setToDoTasks={setToDoTasks}
         />
       )}
-      {/* <AddTaskButton setOpenAddTask={setOpenAddTask} /> */}
+      <AddTaskButton setOpenAddTask={setOpenAddTask} />
     </>
   );
 }
