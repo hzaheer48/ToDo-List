@@ -95,7 +95,7 @@ const PendingAndCompletedList = ({
               </Typography>
             </Tooltip>
 
-            {/* {hoveredIndex === index && (
+            {hoveredIndex === index && (
               <IconButton
                 size="small"
                 title="Delete SubTask"
@@ -103,7 +103,7 @@ const PendingAndCompletedList = ({
               >
                 <DeleteOutlineOutlinedIcon color="error" />
               </IconButton>
-            )} */}
+            )}
           </Box>
         </Box>
       ))}
@@ -173,7 +173,7 @@ export default function Task({ task, index, toDoTasks, setToDoTasks }) {
               }}
             >
               {strikeThrough ? <s>{task.title}</s> : task.title}
-              {/* {hoveredTitle && (
+              {hoveredTitle && (
                 <IconButton
                   size="small"
                   title="Delete Task"
@@ -181,7 +181,7 @@ export default function Task({ task, index, toDoTasks, setToDoTasks }) {
                 >
                   <DeleteOutlineOutlinedIcon color="error" />
                 </IconButton>
-              )} */}
+              )}
             </Typography>
             <Button
               variant="contained"
