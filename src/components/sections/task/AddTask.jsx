@@ -6,22 +6,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { getCurrentTime } from "../../utils/Functions";
 
-export default function AddSubTask({
-  open,
-  setOpen,
-  toDoTasks,
-  setToDoTasks,
-  index,
-}) {
+export default function AddTask({ open, setOpen, setToDoTasks }) {
   const [taskTitle, setTaskTitle] = React.useState("");
 
   const handleAdd = () => {
     if (taskTitle.trim() !== "") {
-      const updatedTasks = [...toDoTasks];
-      const taskToUpdate = updatedTasks[index];
-      taskToUpdate.pending.push(taskTitle);
-      setToDoTasks(updatedTasks);
+      const newTask = { title: taskTitle, createdAt: getCurrentTime() , pending: [], completed: [] };
+      setToDoTasks((prevTasks) => [...prevTasks, newTask]);
       setTaskTitle("");
       setOpen(false);
     }
@@ -38,17 +31,17 @@ export default function AddSubTask({
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
-        <DialogTitle color={"green"}>Add SubTask</DialogTitle>
+        <DialogTitle color={"#ab3003"}>Add Task</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please add your subtask title</DialogContentText>
+          <DialogContentText>Please add your task title</DialogContentText>
           <TextField
             autoComplete="off"
             autoFocus
             required
             margin="dense"
-            id="SubTask"
-            name="SubTask"
-            label="SubTask"
+            id="Task"
+            name="Task"
+            label="Task"
             type="text"
             fullWidth
             variant="outlined"
@@ -63,8 +56,10 @@ export default function AddSubTask({
           <Button
             onClick={handleAdd}
             variant="contained"
-            color="success"
             type="submit"
+            sx={{
+              backgroundColor:"#fa963a"
+            }}
           >
             Add
           </Button>
