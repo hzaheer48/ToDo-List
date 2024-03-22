@@ -7,13 +7,21 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function AddTask({ open, setOpen, setToDoTasks }) {
+export default function AddSubTask({
+  open,
+  setOpen,
+  toDoTasks,
+  setToDoTasks,
+  index,
+}) {
   const [taskTitle, setTaskTitle] = React.useState("");
 
   const handleAdd = () => {
     if (taskTitle.trim() !== "") {
-      const newTask = { title: taskTitle, pending: [], completed: [] };
-      setToDoTasks((prevTasks) => [...prevTasks, newTask]);
+      const updatedTasks = [...toDoTasks];
+      const taskToUpdate = updatedTasks[index];
+      taskToUpdate.pending.push(taskTitle);
+      setToDoTasks(updatedTasks);
       setTaskTitle("");
       setOpen(false);
     }
@@ -30,17 +38,17 @@ export default function AddTask({ open, setOpen, setToDoTasks }) {
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
-        <DialogTitle color={"green"}>Add Task</DialogTitle>
+        <DialogTitle color={"#ab3003"}>Add SubTask</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please add your task title</DialogContentText>
+          <DialogContentText>Please add your subtask title</DialogContentText>
           <TextField
             autoComplete="off"
             autoFocus
             required
             margin="dense"
-            id="Task"
-            name="Task"
-            label="Task"
+            id="SubTask"
+            name="SubTask"
+            label="SubTask"
             type="text"
             fullWidth
             variant="outlined"
@@ -55,7 +63,9 @@ export default function AddTask({ open, setOpen, setToDoTasks }) {
           <Button
             onClick={handleAdd}
             variant="contained"
-            color="success"
+            sx={{
+              backgroundColor:"#fa963a"
+            }}
             type="submit"
           >
             Add

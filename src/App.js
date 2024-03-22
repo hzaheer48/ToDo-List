@@ -1,4 +1,4 @@
-import ToDo from "./components/ToDo";
+import Home from "./components/Home";
 import { ThemeProvider, createTheme } from '@mui/material/styles'; 
 
 const theme = createTheme({
@@ -11,7 +11,8 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <ToDo/>
+
+      <Home/>
     </ThemeProvider>
    
   );

@@ -12,8 +12,10 @@ export default function DeleteTask({
   toDoTasks,
   setToDoTasks,
   index,
+  setSubTask
 }) {
   const handleDelete = () => {
+    setSubTask(-1);
     const updatedTasks = [...toDoTasks];
     updatedTasks.splice(index, 1);
     setToDoTasks(updatedTasks);
