@@ -15,7 +15,6 @@ import AddSubTask from "./AddSubTask";
 export default function Tasks({
   task,
   index,
-  toDoTasks,
   setToDoTasks,
   subTask,
   setSubTask,
@@ -88,7 +87,7 @@ export default function Tasks({
           onMouseEnter={() => setHoveredTitle(true)}
           onMouseLeave={() => setHoveredTitle(false)}
         >
-          <Typography variant="h4" align="" gutterBottom>
+          <Typography variant="h4" gutterBottom>
             {task.title}
           </Typography>
           {hoveredTitle && (
@@ -105,8 +104,7 @@ export default function Tasks({
           <SubTasks
             pending={task.pending}
             completed={task.completed}
-            taskIndex={index}
-            toDoTasks={toDoTasks}
+            id={task.id}
             setToDoTasks={setToDoTasks}
           />
         )}
@@ -127,18 +125,16 @@ export default function Tasks({
         <AddSubTask
           open={openAddSubTask}
           setOpen={setOpenAddSubTask}
-          toDoTasks={toDoTasks}
           setToDoTasks={setToDoTasks}
-          index={index}
+          id={task.id}
         />
       )}
       {openDeleteTask && (
         <DeleteTask
           open={openDeleteTask}
           setOpen={setOpenDeleteTask}
-          toDoTasks={toDoTasks}
           setToDoTasks={setToDoTasks}
-          index={index}
+          id={task.id}
           setSubTask={setSubTask}
         />
       )}

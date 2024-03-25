@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Box, Typography, Tooltip, IconButton } from "@mui/material";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import DeleteSubTask from "./DeleteSubTask";
+import { arrayRemove, arrayUnion, collection, doc, getDocs, updateDoc } from "@firebase/firestore";
+import { firestore } from "../../utils/Connection";
 
 const mergeArrays = (pending, completed) => {
   const maxLength = Math.max(pending.length, completed.length);
@@ -17,29 +19,48 @@ const mergeArrays = (pending, completed) => {
 export default function SubTasks({
   pending,
   completed,
-  toDoTasks,
+  id,
   setToDoTasks,
-  taskIndex,
 }) {
   const finalArray = mergeArrays(pending, completed);
   const [openDeleteSubTask, setOpenDeleteSubTask] = useState(false);
   const [subTaskIndex, setSubTaskIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const handlePendingTaskClicked = (task, index) => {
-    const updatedTasks = [...toDoTasks];
-    const taskToUpdate = updatedTasks[taskIndex];
-    taskToUpdate.pending.splice(index, 1);
-    taskToUpdate.completed.push(task);
-    setToDoTasks(updatedTasks);
+  const handlePendingTaskClicked = async (task) => {
+    const docRef = doc(firestore, "tasks", id);
+    await updateDoc(docRef, {
+      pending: arrayRemove(task),
+      completed : arrayUnion(task)
+    });
+    const tasksArray = [];
+    const querySnapshot = await getDocs(collection(firestore, "tasks"));
+    querySnapshot.forEach((doc) => {
+      const singleTask = {
+        id : doc.id,
+        ...doc.data()
+      }
+      tasksArray.push(singleTask);
+    });
+    setToDoTasks(tasksArray);
   };
 
-  const handleCompletedTaskClicked = (task, index) => {
-    const updatedTasks = [...toDoTasks];
-    const taskToUpdate = updatedTasks[taskIndex];
-    taskToUpdate.completed.splice(index, 1);
-    taskToUpdate.pending.push(task);
-    setToDoTasks(updatedTasks);
+  const handleCompletedTaskClicked = async (task) => {
+    const docRef = doc(firestore, "tasks", id);
+    await updateDoc(docRef, {
+      pending: arrayUnion(task),
+      completed : arrayRemove(task)
+    });
+    const tasksArray = [];
+    const querySnapshot = await getDocs(collection(firestore, "tasks"));
+    querySnapshot.forEach((doc) => {
+      const singleTask = {
+        id : doc.id,
+        ...doc.data()
+      }
+      tasksArray.push(singleTask);
+    });
+    setToDoTasks(tasksArray);
   };
 
   const handleDeleteSubTask = (index) => {
@@ -116,9 +137,8 @@ export default function SubTasks({
         <DeleteSubTask
           open={openDeleteSubTask}
           setOpen={setOpenDeleteSubTask}
-          toDoTasks={toDoTasks}
           setToDoTasks={setToDoTasks}
-          taskIndex={taskIndex}
+          id = {id}
           index={subTaskIndex}
         />
       )}

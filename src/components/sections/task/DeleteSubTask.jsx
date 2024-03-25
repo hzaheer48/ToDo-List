@@ -5,20 +5,36 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { arrayRemove, collection, doc, getDoc, getDocs, updateDoc } from "@firebase/firestore";
+import { firestore } from "../../utils/Connection";
 
 export default function DeleteSubTask({
   open,
   setOpen,
-  toDoTasks,
   setToDoTasks,
+  id,
   index,
-  taskIndex,
 }) {
-  const handleDelete = () => {
-    const updatedTasks = [...toDoTasks];
-    const taskToUpdate = updatedTasks[taskIndex];
-    taskToUpdate.completed.splice(index, 1);
-    setToDoTasks(updatedTasks);
+  const [deleteButtonClicked,setDeleteButtonClicked] = React.useState(false);
+  const handleDelete = async () => {
+    setDeleteButtonClicked(true)
+    const docRef = doc(firestore, "tasks", id);
+    const docSnap = await getDoc(docRef);
+    const taskTitle = docSnap.data().completed[index]
+    await updateDoc(docRef, {
+      completed: arrayRemove(taskTitle)
+    });
+    const tasksArray = [];
+    const querySnapshot = await getDocs(collection(firestore, "tasks"));
+    querySnapshot.forEach((doc) => {
+      const singleTask = {
+        id : doc.id,
+        ...doc.data()
+      }
+      tasksArray.push(singleTask);
+    });
+    setToDoTasks(tasksArray);
+    setDeleteButtonClicked(true);
     setOpen(false);
   };
   const handleClose = () => {
@@ -46,6 +62,7 @@ export default function DeleteSubTask({
           </Button>
           <Button
             variant="contained"
+            disabled={deleteButtonClicked}
             onClick={handleDelete}
             autoFocus
             color="error"

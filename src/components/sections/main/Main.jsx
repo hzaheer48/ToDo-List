@@ -3,12 +3,12 @@ import Overlay from "../../utils/Overlay";
 import TaskComponent from "../task/TasksComponent";
 import ActivityComponent from "../activity/ActivityComponent";
 
-export default function Main({ selectedOption,toDoTasks,setToDoTasks,activities,setActivities }) {
+export default function Main({ selectedOption,toDoTasks,setToDoTasks,loadingTasks,activities,setActivities }) {
   return (
     <Box width={"80%"} display={"flex"} flexDirection={"column"}>
       <Overlay selectedOption={selectedOption} />
       {selectedOption.id === 0 ? (
-        <TaskComponent toDoTasks={toDoTasks} setToDoTasks={setToDoTasks}/>
+        <TaskComponent toDoTasks={toDoTasks} setToDoTasks={setToDoTasks} loadingTasks={loadingTasks}/>
       ) : (
         <ActivityComponent
           activities={activities}
