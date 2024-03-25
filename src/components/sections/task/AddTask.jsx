@@ -7,14 +7,28 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { getCurrentTime } from "../../utils/Functions";
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+import { firestore } from "../../utils/Connection";
 
 export default function AddTask({ open, setOpen, setToDoTasks }) {
   const [taskTitle, setTaskTitle] = React.useState("");
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (taskTitle.trim() !== "") {
       const newTask = { title: taskTitle, createdAt: getCurrentTime() , pending: [], completed: [] };
-      setToDoTasks((prevTasks) => [...prevTasks, newTask]);
+      const ref = collection(firestore, "tasks")
+      let data = newTask
+      addDoc(ref, data);
+      const tasksArray = [];
+      const querySnapshot = await getDocs(collection(firestore, "tasks"));
+      querySnapshot.forEach((doc) => {
+        const singleTask = {
+          id : doc.id,
+          ...doc.data()
+        }
+        tasksArray.push(singleTask);
+      });
+      setToDoTasks(tasksArray);
       setTaskTitle("");
       setOpen(false);
     }

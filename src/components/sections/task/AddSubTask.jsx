@@ -6,23 +6,37 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { arrayUnion, collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { firestore } from "../../utils/Connection";
 
 export default function AddSubTask({
   open,
   setOpen,
-  toDoTasks,
   setToDoTasks,
-  index,
+  id,
 }) {
+  const [addButtonClicked,setAddButtonClicked] = React.useState(false);
   const [taskTitle, setTaskTitle] = React.useState("");
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (taskTitle.trim() !== "") {
-      const updatedTasks = [...toDoTasks];
-      const taskToUpdate = updatedTasks[index];
-      taskToUpdate.pending.push(taskTitle);
-      setToDoTasks(updatedTasks);
+      setAddButtonClicked(true)
+      const docRef = doc(firestore, "tasks", id);
+      await updateDoc(docRef, {
+        pending: arrayUnion(taskTitle)
+      });
+      const tasksArray = [];
+      const querySnapshot = await getDocs(collection(firestore, "tasks"));
+      querySnapshot.forEach((doc) => {
+        const singleTask = {
+          id : doc.id,
+          ...doc.data()
+        }
+        tasksArray.push(singleTask);
+      });
+      setToDoTasks(tasksArray);
       setTaskTitle("");
+      setAddButtonClicked(true);
       setOpen(false);
     }
   };
@@ -62,6 +76,7 @@ export default function AddSubTask({
           </Button>
           <Button
             onClick={handleAdd}
+            disabled={addButtonClicked}
             variant="contained"
             sx={{
               backgroundColor:"#fa963a"
